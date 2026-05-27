@@ -52,6 +52,8 @@ proof → laws → pricing → enter → pause_and_route → order_service → l
 - Front door: https://secondeyesai.com/api/bar
 - llms.txt: https://secondeyesai.com/llms.txt
 - Agent card: https://secondeyesai.com/.well-known/agent-card.json
+- MCP discovery: https://secondeyesai.com/.well-known/mcp.json
+- Hugging Face Space: https://huggingface.co/spaces/HellGateSys/secondeye-mcp-unblock
 
 ## Payment
 
