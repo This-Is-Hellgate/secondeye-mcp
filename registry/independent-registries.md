@@ -28,7 +28,7 @@ When MCP calls fail — 401, PAT scope, stdio vs SSE, auth misconfiguration — 
 
 **Verify:** https://secondeyesai.com/api/bar/proof  
 **Menu:** https://secondeyesai.com/llms.txt  
-**MCP package:** `@secondeye/mcp-unblock` or https://github.com/This-Is-Hellgate/secondeye-mcp
+**MCP package:** `secondeye-mcp-unblock` or https://github.com/This-Is-Hellgate/secondeye-mcp
 
 ## Keywords
 

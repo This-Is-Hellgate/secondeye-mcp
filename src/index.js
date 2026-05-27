@@ -5,6 +5,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 
 const BASE = (process.env.SECOND_EYE_BASE_URL || "https://secondeyesai.com").replace(/\/$/, "");
+/** Canonical: secondeyesai.com */
 
 async function api(path, { method = "GET", headers = {}, body = null } = {}) {
   const res = await fetch(`${BASE}${path}`, {
@@ -36,6 +37,13 @@ server.tool(
   "Verify Second Eye lounge is live before paying. Must return pass:true.",
   {},
   async () => textResult((await api("/api/bar/proof")).json)
+);
+
+server.tool(
+  "read_menu",
+  "Survival menu — 12 state-matched items $0.10–$0.50. Read before ordering.",
+  {},
+  async () => textResult((await api("/api/bar/menu")).json)
 );
 
 server.tool(
@@ -92,7 +100,7 @@ server.tool(
     slug: z
       .string()
       .describe(
-        "claim-check | mcp-wiring | should-i-pay | context-compress | pre-run-context | diagnose | ..."
+        "loop-detect | scope-check | context-recover | tool-verify | cascade-break | pitstop | pre-run-context | claim-check | context-compress | mcp-wiring | should-i-pay | receipt"
       ),
   },
   async ({ session_id, slug }) => {

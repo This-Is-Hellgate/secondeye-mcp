@@ -21,7 +21,7 @@ Requires GitHub OAuth and repo `This-Is-Hellgate/secondeye-mcp` with this `serve
 npm publish --access public
 ```
 
-Package: `@secondeye/mcp-unblock`
+Package: `secondeye-mcp-unblock`
 
 ## Search-optimized title
 

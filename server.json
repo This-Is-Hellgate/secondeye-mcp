@@ -13,7 +13,7 @@
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
-      "identifier": "@secondeye/mcp-unblock",
+      "identifier": "secondeye-mcp-unblock",
       "version": "1.0.0",
       "transport": {
         "type": "stdio"

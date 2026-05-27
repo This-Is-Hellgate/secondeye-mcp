@@ -36,7 +36,7 @@ def mcp_config():
             "mcpServers": {
                 "secondeye-unblock": {
                     "command": "npx",
-                    "args": ["-y", "@secondeye/mcp-unblock"],
+                    "args": ["-y", "secondeye-mcp-unblock"],
                     "env": {"SECOND_EYE_BASE_URL": BASE},
                 }
             }

@@ -1,16 +1,22 @@
 {
-  "name": "@secondeye/mcp-unblock",
+  "name": "secondeye-mcp-unblock",
   "version": "1.0.0",
+  "mcpName": "io.github.this-is-hellgate/secondeye-mcp-unblock",
   "description": "MCP 401 auth fix | github PAT wiring | x402 USDC Base | proof required — proxy to Second Eye agent lounge",
   "type": "module",
   "bin": {
-    "secondeye-mcp": "./src/index.js"
+    "secondeye-mcp": "./src/index.js",
+    "secondeye-mcp-unblock": "./src/index.js"
   },
   "files": [
     "src",
     "server.json",
     "README.md"
   ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "keywords": [
     "mcp",
     "github-mcp",
