@@ -62,11 +62,11 @@ jobs:
           fs.writeFileSync('server.json', JSON.stringify(d, null, 2) + '\n');
           " "$VERSION"
 
-      - name: Dry-run validate
-        run: ./mcp-publisher publish --dry-run
-
       - name: Authenticate (GitHub OIDC)
         run: ./mcp-publisher login github-oidc
+
+      - name: Dry-run validate
+        run: ./mcp-publisher publish --dry-run
 
       - name: Publish to MCP Registry
         run: ./mcp-publisher publish
