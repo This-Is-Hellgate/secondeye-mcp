@@ -1,0 +1,17 @@
+name: Sync NPM_TOKEN to monorepo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy NPM_TOKEN to second-eyes-ai
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "$NPM_TOKEN" | gh secret set NPM_TOKEN -R This-Is-Hellgate/second-eyes-ai
