@@ -3,7 +3,7 @@
   "name": "io.github.this-is-hellgate/secondeye-mcp-unblock",
   "title": "MCP 401 Auth Fix | github PAT wiring | x402",
   "description": "Stuck on MCP? github-mcp 401 PAT failure, cursor wiring, stdio vs sse. Proof before pay. x402 USDC Base. First 15 min session free. POST error state → routed fix + price → receipt on leave.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "websiteUrl": "https://secondeyesai.com/api/bar",
   "repository": {
     "url": "https://github.com/This-Is-Hellgate/secondeye-mcp",
@@ -13,8 +13,8 @@
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
-      "identifier": "secondeye-mcp-unblock",
-      "version": "1.0.0",
+      "identifier": "@secondeyes/mcp-unblock",
+      "version": "1.0.1",
       "transport": {
         "type": "stdio"
       },
