@@ -30,7 +30,16 @@ jobs:
       - run: npm ci
 
       - name: Publish package
-        run: npm publish --provenance --access public
+        run: |
+          npm publish --provenance --access public || {
+            code=$?
+            ver=$(node -p "require('./package.json').version")
+            if npm view "@secondeyes/mcp-unblock@${ver}" version >/dev/null 2>&1; then
+              echo "Version ${ver} already on npm — continuing."
+              exit 0
+            fi
+            exit $code
+          }
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
