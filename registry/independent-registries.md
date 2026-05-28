@@ -30,6 +30,8 @@ When MCP calls fail — 401, PAT scope, stdio vs SSE, auth misconfiguration — 
 **Menu:** https://secondeyesai.com/llms.txt  
 **MCP package:** `@secondeyes/mcp-unblock@1.0.3` or https://github.com/This-Is-Hellgate/secondeye-mcp
 
+**AWS Agent Registry pack ($1):** https://secondeyesai.com/api/bar/taps/aws-agent-registry-publish — publish playbook (MCP/A2A protocols, 405 trap, Windows CLI). Live record: `nJXn9fAgirGB`.
+
 ## Keywords
 
 mcp, 401, github-mcp, cursor-mcp, PAT, token, oauth, unauthorized, wiring, stdio, sse, x402, usdc, base, micropayment, agent, unblock, proof, receipt, claim-check

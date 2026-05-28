@@ -33,7 +33,7 @@ Requires: AWS CLI v2.34.28+ and bedrock-agentcore-control permissions
 }
 
 function aws(args) {
-  const res = spawnSync("aws", args, { encoding: "utf8", shell: true });
+  const res = spawnSync("aws", args, { encoding: "utf8", shell: false });
   if (res.status !== 0) {
     console.error(res.stderr || res.stdout);
     process.exit(res.status || 1);
@@ -50,32 +50,15 @@ const mcpServer = {
   repository: serverJson.repository,
   packages: serverJson.packages,
   remotes: serverJson.remotes,
-  npm: packageJson.name,
-  proof: "https://secondeyesai.com/api/bar/proof",
-  menu: "https://secondeyesai.com/api/bar/menu",
-  enter: "https://secondeyesai.com/api/bar/enter",
-  payment: { rail: "x402", network: "base", asset: "USDC" },
 };
 
-const mcpTools = {
-  tools: [
-    { name: "proof_bar", description: "Verify lounge live before paying" },
-    { name: "read_menu", description: "Survival menu $0.10–$0.50" },
-    { name: "read_laws", description: "Deterministic lounge laws" },
-    { name: "read_pricing", description: "Session + service pricing" },
-    { name: "enter_lounge", description: "Start session + work stamp" },
-    { name: "pause_and_route", description: "POST stuck state → routed service" },
-    { name: "order_service", description: "Survival services by slug" },
-    { name: "leave_with_receipt", description: "Exit with receipt" },
-    { name: "github_mcp_401_fix", description: "Shortcut PAT/401 → mcp-wiring" },
-  ],
-};
-
-const payload = {
+// Manual descriptor only — do NOT sync from .well-known/mcp.json (static JSON returns HTTP 405).
+// To auto-sync, point at the live MCP endpoint: https://secondeyesai.com/api/bar
+const cliInput = {
   registryId: REGISTRY_ID,
   name: RECORD_NAME,
   description:
-    "MCP 401 auth fix | github PAT wiring | x402 USDC Base. Proof before pay. Survival menu for stuck agents. npm: secondeye-mcp-unblock",
+    "MCP 401 auth fix. github PAT wiring. x402 USDC Base. Proof before pay. npm: @secondeyes/mcp-unblock",
   descriptorType: "MCP",
   recordVersion: serverJson.version,
   descriptors: {
@@ -84,22 +67,12 @@ const payload = {
         schemaVersion: "2025-12-11",
         inlineContent: JSON.stringify(mcpServer),
       },
-      tools: {
-        protocolVersion: "2024-11-05",
-        inlineContent: JSON.stringify(mcpTools),
-      },
-    },
-  },
-  synchronizationType: "FROM_URL",
-  synchronizationConfiguration: {
-    fromUrl: {
-      url: "https://secondeyesai.com/.well-known/mcp.json",
     },
   },
 };
 
 const payloadPath = join(repoRoot, "registry", "aws-registry-record.json");
-writeFileSync(payloadPath, JSON.stringify(payload, null, 2));
+writeFileSync(payloadPath, JSON.stringify(cliInput, null, 2));
 console.log("Wrote", payloadPath);
 
 console.log("Creating registry record…");
@@ -108,29 +81,19 @@ const createOut = aws([
   "create-registry-record",
   "--region",
   REGION,
-  "--registry-id",
-  REGISTRY_ID,
-  "--name",
-  RECORD_NAME,
-  "--description",
-  payload.description,
-  "--descriptor-type",
-  "MCP",
-  "--record-version",
-  serverJson.version,
-  "--descriptors",
-  JSON.stringify(payload.descriptors),
-  "--synchronization-type",
-  "FROM_URL",
-  "--synchronization-configuration",
-  JSON.stringify(payload.synchronizationConfiguration),
+  "--cli-input-json",
+  `file://${payloadPath.replace(/\\/g, "/")}`,
   "--output",
   "json",
 ]);
 
 const created = JSON.parse(createOut);
-const recordId = created.recordId || created.record?.recordId;
-console.log("Record created:", recordId);
+const recordArn = created.recordArn || created.record?.recordArn;
+const recordId =
+  created.recordId ||
+  created.record?.recordId ||
+  (recordArn ? recordArn.split("/record/").pop() : undefined);
+console.log("Record created:", recordId, recordArn ? `(${recordArn})` : "");
 
 console.log("Submitting for approval…");
 aws([

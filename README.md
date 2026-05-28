@@ -68,6 +68,14 @@ npx @modelcontextprotocol/registry-cli publish
 
 (from repo root with `server.json`)
 
+## AWS Agent Registry
+
+Live record: `nJXn9fAgirGB` in registry `jaMy0SuApKYYJDTa` (APPROVED).
+
+**Full publish playbook ($1 micro tap):** https://secondeyesai.com/api/bar/taps/aws-agent-registry-publish  
+**Free summary:** [registry/packs/aws-agent-registry-publish.md](./registry/packs/aws-agent-registry-publish.md)  
+**Automated:** `AWS_AGENT_REGISTRY_ID=jaMy0SuApKYYJDTa node scripts/publish-aws-registry.mjs`
+
 ## License
 
 MIT
