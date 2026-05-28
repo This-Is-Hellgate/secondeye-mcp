@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.this-is-hellgate/secondeye-mcp-unblock",
+  "name": "io.github.This-Is-Hellgate/secondeye-mcp-unblock",
   "title": "MCP 401 Auth Fix | github PAT wiring | x402",
   "description": "github-mcp 401? PAT wiring. Proof before pay. x402 USDC Base. 15 min free.",
   "version": "1.0.1",
