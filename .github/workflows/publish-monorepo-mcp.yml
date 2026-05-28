@@ -54,7 +54,7 @@ jobs:
       - name: Publish package
         working-directory: mono/packages/secondeye-mcp
         run: |
-          npm publish --provenance --access public || {
+          npm publish --access public || {
             code=$?
             ver=$(node -p "require('./package.json').version")
             if npm view "@secondeyes/mcp-unblock@${ver}" version >/dev/null 2>&1; then
