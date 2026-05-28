@@ -1,0 +1,110 @@
+name: Publish MCP from monorepo
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: npm version to publish (e.g. 1.0.4)
+        required: true
+        default: "1.0.4"
+
+permissions:
+  contents: read
+
+jobs:
+  publish-npm:
+    name: Publish @secondeyes/mcp-unblock from second-eyes-ai
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: This-Is-Hellgate/second-eyes-ai
+          ref: main
+          path: mono
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://registry.npmjs.org
+          cache: npm
+          cache-dependency-path: mono/packages/secondeye-mcp/package-lock.json
+
+      - name: Set version
+        working-directory: mono/packages/secondeye-mcp
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          node -e "
+          const fs = require('fs');
+          const v = process.argv[1];
+          const d = JSON.parse(fs.readFileSync('server.json', 'utf8'));
+          d.version = v;
+          for (const p of d.packages || []) p.version = v;
+          fs.writeFileSync('server.json', JSON.stringify(d, null, 2) + '\n');
+          " "$VERSION"
+
+      - run: npm ci
+        working-directory: mono/packages/secondeye-mcp
+
+      - name: Publish package
+        working-directory: mono/packages/secondeye-mcp
+        run: |
+          npm publish --provenance --access public || {
+            code=$?
+            ver=$(node -p "require('./package.json').version")
+            if npm view "@secondeyes/mcp-unblock@${ver}" version >/dev/null 2>&1; then
+              echo "Version ${ver} already on npm — continuing."
+              exit 0
+            fi
+            exit $code
+          }
+
+  publish-mcp-registry:
+    name: Publish to MCP Registry
+    needs: publish-npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: This-Is-Hellgate/second-eyes-ai
+          ref: main
+          path: mono
+
+      - name: Install mcp-publisher
+        working-directory: mono/packages/secondeye-mcp
+        run: |
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+          chmod +x mcp-publisher
+
+      - name: Set version in server.json
+        working-directory: mono/packages/secondeye-mcp
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          node -e "
+          const fs = require('fs');
+          const v = process.argv[1];
+          const d = JSON.parse(fs.readFileSync('server.json', 'utf8'));
+          d.version = v;
+          for (const p of d.packages || []) p.version = v;
+          fs.writeFileSync('server.json', JSON.stringify(d, null, 2) + '\n');
+          " "$VERSION"
+
+      - name: Authenticate (GitHub OIDC)
+        working-directory: mono/packages/secondeye-mcp
+        run: ./mcp-publisher login github-oidc
+
+      - name: Dry-run validate
+        working-directory: mono/packages/secondeye-mcp
+        run: ./mcp-publisher publish --dry-run
+
+      - name: Publish to MCP Registry
+        working-directory: mono/packages/secondeye-mcp
+        run: ./mcp-publisher publish
