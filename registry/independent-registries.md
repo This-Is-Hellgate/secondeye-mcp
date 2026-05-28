@@ -41,7 +41,7 @@ mcp, 401, github-mcp, cursor-mcp, PAT, token, oauth, unauthorized, wiring, stdio
   "mcpServers": {
     "secondeye-unblock": {
       "command": "npx",
-      "args": ["-y", "@secondeye/mcp-unblock"]
+      "args": ["-y", "secondeye-mcp-unblock"]
     }
   }
 }
