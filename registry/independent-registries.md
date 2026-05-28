@@ -32,6 +32,15 @@ When MCP calls fail — 401, PAT scope, stdio vs SSE, auth misconfiguration — 
 
 **AWS Agent Registry pack ($1):** https://secondeyesai.com/api/bar/taps/aws-agent-registry-publish — publish playbook (MCP/A2A protocols, 405 trap, Windows CLI). Live record: `nJXn9fAgirGB`.
 
+## Smithery
+
+```powershell
+$env:SMITHERY_API_KEY = "your-key"
+npx @smithery/cli mcp publish "https://secondeyesai.com/api/bar" -n "@secondeyes/mcp-unblock"
+```
+
+Details: `registry/smithery.md` — requires MCP POST on `/api/bar` + `/.well-known/mcp/server-card.json`.
+
 ## Keywords
 
 mcp, 401, github-mcp, cursor-mcp, PAT, token, oauth, unauthorized, wiring, stdio, sse, x402, usdc, base, micropayment, agent, unblock, proof, receipt, claim-check
