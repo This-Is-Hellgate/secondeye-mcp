@@ -1,84 +1,65 @@
 # Publish checklist
 
-Three steps to make discovery real. **Step 1 unlocks the other two.**
+**Status (2026-05-26):** npm + MCP Registry live at `@secondeyes/mcp-unblock@1.0.3`.
 
-## 1. npm publish (required first)
+## 1. npm + MCP Registry (done)
 
-The `@secondeye` org does not exist on npm yet. Package name is **`secondeye-mcp-unblock`** (unscoped, available).
+| Target | Value |
+|--------|-------|
+| npm | `@secondeyes/mcp-unblock@1.0.3` |
+| MCP Registry | `io.github.This-Is-Hellgate/secondeye-mcp-unblock` |
+| GitHub secret | `NPM_TOKEN` on `This-Is-Hellgate/secondeye-mcp` |
 
-### One-time setup (~2 min)
-
-1. Create npm account: https://www.npmjs.com/signup
-2. Create automation token: https://www.npmjs.com/settings/~tokens → **Granular Access Token** → publish permission for `secondeye-mcp-unblock`
-3. Add to GitHub repo secret:
-   ```bash
-   gh secret set NPM_TOKEN -R This-Is-Hellgate/secondeye-mcp
-   ```
-   Paste the token when prompted.
-
-### Publish
+### Bump + publish
 
 ```bash
-cd packages/secondeye-mcp   # or repo root if standalone
-git tag v1.0.0
-git push origin v1.0.0
+# bump package.json + server.json version
+git commit -am "chore: bump to X.Y.Z"
+git tag vX.Y.Z
+git push origin main --tags
 ```
 
-GitHub Actions (`.github/workflows/publish.yml`) will:
-- `npm publish --provenance` → https://www.npmjs.com/package/secondeye-mcp-unblock
-- `mcp-publisher login github-oidc` + `publish` → official MCP Registry
+GitHub Actions (`.github/workflows/publish.yml`) publishes npm + MCP Registry on tag push.
 
-### Install after publish
+### Install
 
 ```json
 {
   "mcpServers": {
     "secondeye-unblock": {
       "command": "npx",
-      "args": ["-y", "secondeye-mcp-unblock"]
+      "args": ["-y", "@secondeyes/mcp-unblock"],
+      "env": { "SECOND_EYE_BASE_URL": "https://secondeyesai.com" }
     }
   }
 }
 ```
 
-### Manual publish (alternative)
-
-```bash
-npm login
-npm publish --access public
-```
+Or: `npx @secondeyes/mcp-unblock`
 
 ---
 
-## 2. MCP Registry (automatic after npm)
+## 2. Discovery sync (main site)
 
-Requires **npm published first** (registry verifies `mcpName` in package.json matches `server.json` name).
+After npm bump, update and deploy:
 
-Triggered by the same `v*` tag push. Uses GitHub OIDC — no extra secret.
-
-Verify: https://registry.modelcontextprotocol.io (search `secondeye` or `401`)
-
-Dry-run locally:
-```bash
-# download mcp-publisher from MCP registry releases, then:
-./mcp-publisher publish --dry-run
-./mcp-publisher login github
-./mcp-publisher publish
-```
+- `public/.well-known/mcp.json` → `packages[0].version`
+- `public/llms.txt` → MCP install section
+- `npx wrangler pages deploy public --project-name=second-eyes-ai`
 
 ---
 
-## 3. AWS Agent Registry
+## 3. Independent registries (manual)
 
-Private org catalog — agents with AWS wallets discover via `SearchRegistryRecords`.
+Copy-paste from `registry/independent-registries.md` into:
 
-### Prerequisites
+- Glama, Smithery, PulseMCP, mcp.so, Agent.market
 
-- AWS CLI v2.34.28+
-- `bedrock-agentcore-control` permissions
-- Agent Registry created in console
+---
 
-### Publish
+## 4. AWS Agent Registry (optional)
+
+Requires AWS CLI v2.34.28+, credentials, `AWS_AGENT_REGISTRY_ID`.
 
 ```bash
 export AWS_AGENT_REGISTRY_ID=your-registry-id
@@ -86,15 +67,21 @@ export AWS_REGION=us-east-1
 node scripts/publish-aws-registry.mjs
 ```
 
-Copy-paste listing text: `registry/aws-agent-registry.md`
+Listing text: `registry/aws-agent-registry.md`
 
 ---
 
-## Later: `@secondeye` scope
+## 5. Hugging Face Space
 
-When you create the npm org `@secondeye`:
-1. `npm org create secondeye`
-2. Rename package to `@secondeye/mcp-unblock`
-3. Republish + bump MCP registry
+Space: https://huggingface.co/spaces/HellGateSys/secondeye-mcp-unblock
 
-Until then, `npx secondeye-mcp-unblock` works without org setup.
+```bash
+cd hf-space
+hf upload HellGateSys/secondeye-mcp-unblock . --repo-type space
+```
+
+---
+
+## Security
+
+Rotate `NPM_TOKEN` if exposed in chat. Re-enable npm 2FA for write actions when CI is stable.

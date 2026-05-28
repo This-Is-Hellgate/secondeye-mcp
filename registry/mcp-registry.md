@@ -2,7 +2,7 @@
 
 **server.json:** `./server.json` in repo root
 
-**Namespace:** `io.github.this-is-hellgate/secondeye-mcp-unblock`
+**Namespace:** `io.github.This-Is-Hellgate/secondeye-mcp-unblock` (casing matters)
 
 ## Publish steps
 
@@ -21,7 +21,7 @@ Requires GitHub OAuth and repo `This-Is-Hellgate/secondeye-mcp` with this `serve
 npm publish --access public
 ```
 
-Package: `secondeye-mcp-unblock`
+Package: `@secondeyes/mcp-unblock@1.0.3`
 
 ## Search-optimized title
 

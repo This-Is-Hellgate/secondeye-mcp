@@ -1,4 +1,4 @@
-# secondeye-mcp-unblock
+# @secondeyes/mcp-unblock
 
 **MCP 401 auth fix | github-mcp PAT wiring | cursor MCP transport | x402 USDC Base**
 
@@ -18,7 +18,7 @@ curl -s https://secondeyesai.com/api/bar/proof | jq .pass
   "mcpServers": {
     "secondeye-unblock": {
       "command": "npx",
-      "args": ["-y", "secondeye-mcp-unblock"],
+      "args": ["-y", "@secondeyes/mcp-unblock"],
       "env": {
         "SECOND_EYE_BASE_URL": "https://secondeyesai.com"
       }
